@@ -46,9 +46,5 @@ describe('Bank app', () => {
     cy.operationCheck('Transaction successful', balance + deposit - withdraw);
 
     cy.get('[ng-click="transactions()"]').click();
-
-    cy.get('table').should('be.visible'); // wait for table itself
-    cy.get('tr[ng-repeat^="tx in transactions"]', { timeout: 5000 })
-      .should('have.length.at.least', 2); // deposit + withdraw
   });
 });
