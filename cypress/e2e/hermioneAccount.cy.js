@@ -8,8 +8,10 @@ describe('Bank app', () => {
   const currency = 'Dollar';
 
   const deposit = faker.number.int({ min: 1000, max: 9999 });
-
   const withdraw = faker.number.int({ max: balance + deposit });
+
+  const now = new Date();
+  const today = now.toISOString().slice(0, 16);
 
   before(() => {
     cy.visit('/');
@@ -45,6 +47,25 @@ describe('Bank app', () => {
 
     cy.operationCheck('Transaction successful', balance + deposit - withdraw);
 
+    cy.reload();
+
     cy.get('[ng-click="transactions()"]').click();
+
+    cy.get('#start')
+      .invoke('val', today)
+      .trigger('input');
+
+    cy.get('#anchor0').contains('.ng-binding', deposit)
+      .should('be.visible');
+    cy.get('#anchor1').contains('.ng-binding', withdraw)
+      .should('be.visible');
+
+    cy.get('[ng-click="back()"]').click();
+
+    cy.get('[ng-model="accountNo"]').select('1002');
+    cy.get('[ng-click="transactions()"]').click();
+    cy.get('tbody').should('not.have.descendants', 'tr');
+    cy.get('[ng-click="byebye()"]').click();
+    cy.get('#userSelect').should('be.visible');
   });
 });
