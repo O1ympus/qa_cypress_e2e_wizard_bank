@@ -23,3 +23,11 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('operationCheck', (message, balance) => {
+  cy.contains('[ng-show="message"]', message)
+    .should('be.visible');
+  cy.contains('[ng-hide="noAccount"]', 'Balance')
+    .contains('.ng-binding', balance)
+    .should('be.visible');
+});
